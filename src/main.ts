@@ -24,8 +24,19 @@ export default class IconFolderYaml extends Plugin {
 		const iconFolder = data.settings.iconPacksPath;
 		//remove "settings" from data
 		delete data.settings;
-		const icons = data as IconFile;
-		const fileIcon = icons[file.path].toString();
+		const icon = data as IconFile;
+		/**
+		 * Add the key "type" to the object
+		 * based of the file extension
+		 * If no extension = "folder"
+		 * else "file"
+		 */
+		
+		const ext = file.extension;
+		const path = file.path;
+		const regexExt = new RegExp(`.${ext}$`);
+		const isFolder = path.replace(regexExt, "");
+		const fileIcon: string = icon[path] ? icon[path as string].toString() : icon[isFolder as string].toString();
 		if (fileIcon) {
 			const iconPack = (await this.app.vault.adapter.list(iconFolder)).folders;
 			const allPackPrefix = iconPack.map(pack => {
@@ -35,7 +46,7 @@ export default class IconFolderYaml extends Plugin {
 				};
 			});
 			const packPrefix = allPackPrefix.find(pack => {
-				return fileIcon.includes(pack.prefix);
+				return fileIcon.startsWith(pack.prefix);
 			});
 			if (packPrefix) {
 				const iconPath = `${packPrefix.pack}/${fileIcon.replace(packPrefix.prefix, "")}`;
