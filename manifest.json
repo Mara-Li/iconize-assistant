@@ -1,0 +1,11 @@
+{
+	"id": "icon-folder-yaml",
+	"name": "Icon Folder Yaml",
+	"description": "Add your icon folder path in the frontmatter",
+	"author": "Mara-Li",
+	"authorUrl": "https://www.github.com/lisandra-dev",
+	"fundingUrl": "https://ko-fi.com/lisandra_dev",
+	"isDesktopOnly": false,
+	"minAppVersion": "0.16.0",
+	"version": "0.0.1"
+}
