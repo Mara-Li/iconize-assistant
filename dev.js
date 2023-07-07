@@ -50,12 +50,10 @@ if (vaultDev.trim().length > 0) {
 		console.log();
 	}
 }
-const command = `obsidian-plugin dev --with-stylesheet src/styles.css src/main.ts ${cmd}`;
+const command = `obsidian-plugin dev src/main.ts ${cmd}`;
 console.log(
 	c.info.italic(
-		`${c.bold(">")} obsidian-plugin dev ${c.dark.underline(
-			"--with-stylesheet src/styles.css"
-		)} src/main.ts ${msg}`
+		`${c.bold(">")} obsidian-plugin dev src/main.ts ${msg}`
 	)
 );
 execSync(command, { stdio: "inherit" });
