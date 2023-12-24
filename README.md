@@ -1,6 +1,6 @@
 # Icon Folder Yaml
 
-Intended to be used with Iconize, Mkdocs Material (icons) and Obsidian Publisher.
+Intended to be used with [Iconize](https://github.com/FlorianWoelki/obsidian-iconize), [Mkdocs Material](https://squidfunk.github.io/mkdocs-material/reference/#setting-the-page-icon) (icons) and [Obsidian Publisher](https://obsidian-publisher.netlify.app/).
 
 The idea is to add keys into the frontmatter:
 - `icon` : `folderIcon/icon`

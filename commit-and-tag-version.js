@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const { Command, Option } = require("commander");
+const dedent = require("dedent");
 const commitAndTagVersion = require("commit-and-tag-version");
 const c = require("ansi-colors");
 const program = new Command();
