@@ -1,8 +1,17 @@
 # Icon Folder Yaml
 
-Add your icon folder path in the frontmatter
+Intended to be used with Iconize, Mkdocs Material (icons) and Obsidian Publisher.
+
+The idea is to add keys into the frontmatter:
+- `icon` : `folderIcon/icon`
+- `icon_file` : `[[iconFile]]` (only if the svg is not in `.obsidian` or other hidden folder)
+
+Obsidian Publisher will send the `icon_file` into your Repository, and Mkdocs Material will use the `icon` key to display the icon.
+
 
 ## ⚙️ Usage
+
+The plugin add a command to the command palette: `Iconize assistant : Add icon to frontmatter`
 
 ## 📥 Installation
 

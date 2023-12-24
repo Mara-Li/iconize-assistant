@@ -1,10 +1,10 @@
-import {Plugin, TFile} from "obsidian";
-import {DEFAULT_SETTINGS, IconFile, IconFolderYamlSettings} from "./interface";
+import {Plugin, TFile, normalizePath, } from "obsidian";
+import { DEFAULT_SETTINGS, IconFile, IconizeAssistantSettings } from "./interface";
 import {App} from "obsidian-undocumented";
 
-export default class IconFolderYaml extends Plugin {
-	settings: IconFolderYamlSettings;
-	
+export default class IconizeAssistant extends Plugin {
+	settings: IconizeAssistantSettings;
+
 	createIconPackPrefix(iconPackName: string):string {
 		if (iconPackName.includes("-")) {
 			const splitted = iconPackName.split("-");
@@ -16,12 +16,14 @@ export default class IconFolderYaml extends Plugin {
 		}
 		return iconPackName.charAt(0).toUpperCase() + iconPackName.charAt(1).toLowerCase();
 	}
-	
+
 	async getFileIcons(file: TFile) {
 		//get icons folder from another obsidian plugin
 		const obsidianIconFolder = (this.app as App).plugins.getPlugin("obsidian-icon-folder");
 		const data = await obsidianIconFolder.loadData();
 		const iconFolder = data.settings.iconPacksPath;
+		this.settings.iconFolderPath = iconFolder;
+		await this.saveSettings();
 		//remove "settings" from data
 		delete data.settings;
 		const icon = data as IconFile;
@@ -31,7 +33,7 @@ export default class IconFolderYaml extends Plugin {
 		 * If no extension = "folder"
 		 * else "file"
 		 */
-		
+
 		const ext = file.extension;
 		const path = file.path;
 		const regexExt = new RegExp(`.${ext}$`);
@@ -56,13 +58,18 @@ export default class IconFolderYaml extends Plugin {
 		}
 		return null;
 	}
-	
+
 	async editFrontmatter(file: TFile, icon: string) {
+		const getIconAsFile = this.app.vault.getAbstractFileByPath(normalizePath(`${this.settings.iconFolderPath}/${icon}.svg`));
+
 		await this.app.fileManager.processFrontMatter(file, (frontmatter) => {
+			if (getIconAsFile && getIconAsFile instanceof TFile) {
+				frontmatter.icon_file = `[[${getIconAsFile.path}|${getIconAsFile.basename}]]`;
+			}
 			frontmatter.icon = icon;
 		});
 	}
-	
+
 	async onload() {
 		console.log(
 			`IconFolderYaml v.${this.manifest.version} loaded.`
@@ -87,7 +94,7 @@ export default class IconFolderYaml extends Plugin {
 				return false;
 			},
 		});
-		
+
 	}
 	onunload() {
 		console.log(

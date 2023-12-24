@@ -1,7 +1,7 @@
-export interface IconFolderYamlSettings {
+export interface IconizeAssistantSettings {
 	iconFolderPath: string;
 }
-export const DEFAULT_SETTINGS: IconFolderYamlSettings = {
+export const DEFAULT_SETTINGS: IconizeAssistantSettings = {
 	iconFolderPath: ".obsidian/.icons",
 };
 

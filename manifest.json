@@ -1,7 +1,7 @@
 {
-	"id": "icon-folder-yaml",
-	"name": "Icon Folder Yaml",
-	"description": "Add your icon folder path in the frontmatter",
+	"id": "iconize-assistant",
+	"name": "Iconize assistant",
+	"description": "Add your icon used by iconize into your frontmatter",
 	"author": "Mara-Li",
 	"authorUrl": "https://www.github.com/lisandra-dev",
 	"fundingUrl": "https://ko-fi.com/lisandra_dev",
