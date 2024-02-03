@@ -16,7 +16,8 @@ The plugin add a command to the command palette: `Iconize assistant : Add icon t
 ## 📥 Installation
 
 - [ ] From Obsidian's community plugins
-- [x] [Using BRAT with `https://github.com/Lisandra-dev/iconize-assistant`](obsidian://brat?plugin=https://github.com/Lisandra-dev/iconize-assistant)
+- [x] Using BRAT with `https://github.com/Lisandra-dev/iconize-assistant`  
+      → Past this into your browser : `obsidian://brat?plugin=https://github.com/Lisandra-dev/iconize-assistant`
 - [x] From the release page:
       - Download the latest release
       - Unzip `icon-folder-yaml.zip` in `.obsidian/plugins/` path
