@@ -12,5 +12,7 @@ export interface Icon {
 }
 
 export interface IconFile {
-	[filepath: string] : [iconName: string]
+	[filepath: string]: [iconName: string]
 }
+
+type rulesFor = "everything" | "files" | "folders";
