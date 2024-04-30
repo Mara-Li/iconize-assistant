@@ -1,6 +1,6 @@
 {
 	"name": "iconize-assistant",
-	"version": "0.0.4",
+	"version": "0.0.5",
 	"description": "Add your icon folder path in the frontmatter",
 	"main": "lib/main.js",
 	"license": "GPL-3.0-only",

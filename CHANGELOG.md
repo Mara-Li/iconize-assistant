@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.0.5](https://github.com/Lisandra-dev/icon-folder-assistant/compare/0.0.4...0.0.5) (2024-04-30)
+
+
+### Features
+
+* allow settings, customize frontmatter etc ([7733357](https://github.com/Lisandra-dev/icon-folder-assistant/commit/7733357ecabc848cdadd2aae1c9fb1afaea5e2a0))
+
 ## [0.0.4](https://github.com/Lisandra-dev/icon-folder-assistant/compare/0.0.3...0.0.4) (2024-02-03)
 
 
