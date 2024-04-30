@@ -50,6 +50,7 @@ export class IconizeAssistantTab extends PluginSettingTab {
 							.onChange(async (value) => {
 								this.settings.linkToFile.name = value;
 								await this.plugin.saveSettings();
+								this.plugin.addCSS();
 							})
 					);
 			
@@ -96,6 +97,7 @@ export class IconizeAssistantTab extends PluginSettingTab {
 						.onChange(async (value) => {
 							this.settings.iconName.name = value;
 							await this.plugin.saveSettings();
+							this.plugin.addCSS();
 						})
 				);
 

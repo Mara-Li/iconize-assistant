@@ -115,6 +115,8 @@ export default class IconizeAssistant extends Plugin {
 		//open styles.css or create it
 		const thisCssPath = normalizePath(`${this.app.vault.configDir}/plugins/${this.manifest.id}/styles.css`);
 		let css: string = "";
+		const oldCSS = await this.app.vault.adapter.read(thisCssPath);
+
 		const cssRule = (keyName: string) => {
 			return `/* Hide ${keyName} in properties */
 			.metadata-property[data-property-key="${keyName}"] { 
@@ -128,6 +130,7 @@ export default class IconizeAssistant extends Plugin {
 		if (this.settings.linkToFile.enable && this.settings.linkToFile.hide) {
 			css += cssRule(this.settings.linkToFile.name);
 		}
+		if (oldCSS === css) return;
 		await this.app.vault.adapter.write(thisCssPath, dedent(css));
 		//inject with document
 		const style = document.querySelector(`style[plugin="${this.manifest.id}"]`);
