@@ -29,8 +29,12 @@
 		"typescript": "^5.3.3"
 	},
 	"dependencies": {
+		"@lisandra-dev/eslint-config": "^1.1.6",
+		"@typescript-eslint/eslint-plugin": "^7.8.0",
 		"commit-and-tag-version": "^12.2.0",
+		"eslint": "8",
 		"i18next": "^23.8.2",
-		"obsidian-undocumented": "^0.1.3"
+		"obsidian-undocumented": "^0.1.3",
+		"ts-dedent": "^2.2.0"
 	}
 }

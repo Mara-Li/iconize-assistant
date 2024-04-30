@@ -31,7 +31,7 @@ if (vaultDev.trim().length > 0) {
 		vaultDev,
 		".obsidian",
 		"plugins",
-		"icon-folder-yaml",
+		"iconize-assistant",
 		".hotreload"
 	);
 	if (!fs.existsSync(pluginDir)) {

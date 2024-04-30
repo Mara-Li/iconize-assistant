@@ -1,6 +1,10 @@
-import { Plugin, TFile, TFolder, normalizePath, } from "obsidian";
-import { DEFAULT_SETTINGS, IconFile, IconizeAssistantSettings } from "./interface";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { normalizePath,Plugin, TFile, TFolder,  } from "obsidian";
 import { App } from "obsidian-undocumented";
+import dedent from "ts-dedent";
+
+import { DEFAULT_SETTINGS, IconFile, IconizeAssistantSettings, Rule } from "./interface";
+import { IconizeAssistantTab } from "./settings";
 
 export default class IconizeAssistant extends Plugin {
 	settings: IconizeAssistantSettings;
@@ -17,7 +21,8 @@ export default class IconizeAssistant extends Plugin {
 		return iconPackName.charAt(0).toUpperCase() + iconPackName.charAt(1).toLowerCase();
 	}
 
-	searchIfApplicable(rules: any, path: string) {
+	searchIfApplicable(rules: Rule[], path: string): undefined | Rule {
+		if (!this.settings.allowRegex) return undefined;
 		return rules.find((rule: any) => {
 			const regex = new RegExp(rule.rule);
 			return ((rule.for === "everything" || rule.for === "files")) && regex.test(path);
@@ -48,8 +53,8 @@ export default class IconizeAssistant extends Plugin {
 		//get icons folder from another obsidian plugin
 		const obsidianIconFolder = (this.app as App).plugins.getPlugin("obsidian-icon-folder");
 		const data = await obsidianIconFolder.loadData();
-		const rules = data.settings.rules;
-		const iconFolder = data.settings.iconPacksPath;
+		const rules = data.settings.rules as Rule[];
+		const iconFolder = data.settings.iconPacksPath as string;
 		this.settings.iconFolderPath = iconFolder;
 		await this.saveSettings();
 		//remove "settings" from data
@@ -64,7 +69,6 @@ export default class IconizeAssistant extends Plugin {
 		const path = file.path;
 		const isFolder = this.findFolderNote(file)?.path;
 		const fileIcon: string = icon[path] ? icon[path as string].toString() : icon[isFolder] ? icon[isFolder].toString() : null;
-
 		const iconPack = (await this.app.vault.adapter.list(iconFolder)).folders;
 		const allPackPrefix = iconPack.map(pack => {
 			return {
@@ -79,14 +83,13 @@ export default class IconizeAssistant extends Plugin {
 			if (packPrefix) {
 				const iconPath = `${packPrefix.pack}/${fileIcon.replace(packPrefix.prefix, "")}`;
 				//remove obsidian folder from path
-				return iconPath.replace(iconFolder + "/", "");
+				return iconPath.replace(`${iconFolder}/`, "");
 			}
 		} else if (this.searchIfApplicable(rules, path)) {
 			const iconPath = this.searchIfApplicable(rules, path).icon;
 			const packPrefix = allPackPrefix.find(pack => {
 				return iconPath.startsWith(pack.prefix);
 			});
-			console.log(packPrefix, iconPack);
 			if (packPrefix) {
 				const folderIconPath = `${packPrefix.pack}/${iconPath.replace(packPrefix.prefix, "")}`;
 				//remove obsidian folder from path
@@ -98,20 +101,54 @@ export default class IconizeAssistant extends Plugin {
 
 	async editFrontmatter(file: TFile, icon: string) {
 		const getIconAsFile = this.app.vault.getAbstractFileByPath(normalizePath(`${this.settings.iconFolderPath}/${icon}.svg`));
-
+		console.log(`Get icon as file: ${getIconAsFile}`);
 		await this.app.fileManager.processFrontMatter(file, (frontmatter) => {
-			if (getIconAsFile && getIconAsFile instanceof TFile) {
-				frontmatter.icon_file = `[[${getIconAsFile.path}|${getIconAsFile.basename}]]`;
+			if (getIconAsFile && getIconAsFile instanceof TFile && this.settings.linkToFile.enable) {
+				frontmatter[`${this.settings.linkToFile.name}`] = `[[${getIconAsFile.path}|${getIconAsFile.basename}]]`;
 			}
-			frontmatter.icon = icon;
+			if (this.settings.iconName.enable)
+				frontmatter[`${this.settings.iconName.name}`] = icon;
 		});
+	}
+
+	async addCSS() {
+		//open styles.css or create it
+		const thisCssPath = normalizePath(`${this.app.vault.configDir}/plugins/${this.manifest.id}/styles.css`);
+		let css: string = "";
+		const cssRule = (keyName: string) => {
+			return `/* Hide ${keyName} in properties */
+			.metadata-property[data-property-key="${keyName}"] { 
+				display: none !important;
+			}
+			`;
+		};
+		if (this.settings.iconName.enable && this.settings.iconName.hide) {
+			css = cssRule(this.settings.iconName.name);
+		}
+		if (this.settings.linkToFile.enable && this.settings.linkToFile.hide) {
+			css += cssRule(this.settings.linkToFile.name);
+		}
+		await this.app.vault.adapter.write(thisCssPath, dedent(css));
+		//inject with document
+		const style = document.querySelector(`style[plugin="${this.manifest.id}"]`);
+		if (style) {
+			document.head.removeChild(style);
+		}
+		if (css.length > 0) {
+			const style = document.createElement("style");
+			style.setAttribute("plugin", this.manifest.id);
+			style.type = "text/css";
+			style.textContent = dedent(css);
+			document.head.appendChild(style);
+		}
 	}
 
 	async onload() {
 		console.log(
-			`IconFolderYaml v.${this.manifest.version} loaded.`
+			`Iconize Assistant v.${this.manifest.version} loaded.`
 		);
 		await this.loadSettings();
+		this.addSettingTab(new IconizeAssistantTab(this.app, this));
 		/** command that read the opened file and return the icon */
 		this.addCommand({
 			id: "set-file-icon",
@@ -122,6 +159,7 @@ export default class IconizeAssistant extends Plugin {
 				if (file) {
 					if (!checking) {
 						const icon = await this.getFileIcons(file);
+						
 						if (icon) {
 							await this.editFrontmatter(file, icon);
 						}
