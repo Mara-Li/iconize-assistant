@@ -3,6 +3,8 @@ export interface IconizeAssistantSettings {
 	linkToFile: FrontmatterSettings;
 	iconName: FrontmatterSettings;
 	allowRegex: boolean;
+
+	useIconic: boolean;
 }
 export const DEFAULT_SETTINGS: IconizeAssistantSettings = {
 	iconFolderPath: ".obsidian/.icons",
@@ -17,6 +19,7 @@ export const DEFAULT_SETTINGS: IconizeAssistantSettings = {
 		hide: false,
 	},
 	allowRegex: true,
+	useIconic: false,
 };
 
 export interface Icon {

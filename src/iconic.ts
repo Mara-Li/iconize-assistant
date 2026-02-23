@@ -26,9 +26,6 @@ type FileIcons = {
 };
 
 export class IconicAssistant {
-	/**
-	 * Check whether any items match a given operator & value.
-	 */
 	app: App;
 
 	constructor(app: App) {
@@ -40,6 +37,10 @@ export class IconicAssistant {
 			? new RegExp(value.slice(1, -1))
 			: new RegExp(value);
 	}
+	/**
+	 * Check whether any items match a given operator & value.
+	 */
+
 	private any(
 		items: (string | null)[],
 		operator: "are" | "contain" | "startWith" | "endWith" | "match",
@@ -90,12 +91,5 @@ export class IconicAssistant {
 		const rules = [...fileRules, ...folderRules];
 		const fileIcons = settings.fileIcons as FileIcons;
 		return { rules, fileIcons };
-	}
-
-	async iconFolderPath() {
-		const mySvgs = this.app.plugins.getPlugin("my-svgs");
-		if (!mySvgs) return null;
-		const data = await mySvgs.loadData();
-		return data.customFolderPath ?? ".obsidian/.icons";
 	}
 }

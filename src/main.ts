@@ -66,8 +66,7 @@ export default class IconizeAssistant extends Plugin {
 		const data = await obsidianIconFolder?.loadData();
 		const rules = data.settings.rules as Rule[];
 		const iconFolder = data.settings.iconPacksPath as string;
-		this.settings.iconFolderPath = iconFolder;
-		await this.saveSettings();
+
 		//remove "settings" from data
 		delete data.settings;
 		const icon = data as IconFile;

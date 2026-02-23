@@ -2,6 +2,7 @@ import { App, PluginSettingTab, Setting } from "obsidian";
 
 import { IconizeAssistantSettings } from "./interface";
 import IconizeAssistant from "./main";
+import { FolderSuggester } from "./folder";
 
 export class IconizeAssistantTab extends PluginSettingTab {
 	plugin: IconizeAssistant;
@@ -14,60 +15,76 @@ export class IconizeAssistantTab extends PluginSettingTab {
 	}
 
 	display() {
-		const {containerEl} = this;
+		const { containerEl } = this;
 		containerEl.empty();
 
-		if (this.settings.iconFolderPath.startsWith(".obsidian")) {
-			new Setting(containerEl)
-				.setHeading()
-				.setDesc("Could not find the icon folder ! You need to have to have your icons accessible by Obsidian for linking to it. Reload this plugin after edit to make it works!");
+		new Setting(containerEl)
+			.setName("Icon folder path")
+			.addSearch((cb) => {
+				cb.setPlaceholder("Folder").setValue(this.settings.iconFolderPath);
+				new FolderSuggester(cb.inputEl, this.app, async (result) => {
+					this.settings.iconFolderPath = result.trim();
+					await this.plugin.saveSettings();
+				})
+			})
 
-		} else {
-			new Setting(containerEl)
-				.setHeading()
-				.setName("Icon File - Link into frontmatter");
+		new Setting(containerEl)
+			.setName("Use iconic")
+			.setDesc("Use iconic settings (if using my-svgs or other plugin that allow custom icons)")
+			.addToggle((toggle) =>
+				toggle.setValue(this.settings.useIconic)
+					.onChange(async (val) => {
+						this.settings.useIconic = val;
+						await this.plugin.saveSettings();
+					})
+			)
 
+
+		new Setting(containerEl)
+			.setHeading()
+			.setName("Icon File - Link into frontmatter");
+
+		new Setting(containerEl)
+			.setName("Enable")
+			.addToggle((toggle) =>
+				toggle
+					.setValue(this.settings.linkToFile.enable)
+					.onChange(async (value) => {
+						this.settings.linkToFile.enable = value;
+						await this.plugin.saveSettings();
+						this.display();
+						this.plugin.addCSS();
+					})
+			);
+
+		if (this.settings.linkToFile.enable) {
 			new Setting(containerEl)
-				.setName("Enable")
-				.addToggle((toggle) =>
-					toggle
-						.setValue(this.settings.linkToFile.enable)
+				.setName("Name")
+				.setDesc("Name in the frontmatter/properties")
+				.addText((text) =>
+					text
+						.setValue(this.settings.linkToFile.name)
 						.onChange(async (value) => {
-							this.settings.linkToFile.enable = value;
+							this.settings.linkToFile.name = value;
 							await this.plugin.saveSettings();
-							this.display();
 							this.plugin.addCSS();
 						})
 				);
-			
-			if (this.settings.linkToFile.enable) {
-				new Setting(containerEl)
-					.setName("Name")
-					.setDesc("Name in the frontmatter/properties")
-					.addText((text) =>
-						text
-							.setValue(this.settings.linkToFile.name)
-							.onChange(async (value) => {
-								this.settings.linkToFile.name = value;
-								await this.plugin.saveSettings();
-								this.plugin.addCSS();
-							})
-					);
-			
-				new Setting(containerEl)
-					.setName("Hide")
-					.setDesc("Hide the key in Properties (in Live Preview or reading mode). The key continue to be visible in source mode.")
-					.addToggle((toggle) =>
-						toggle
-							.setValue(this.settings.linkToFile.hide)
-							.onChange(async (value) => {
-								this.settings.linkToFile.hide = value;
-								await this.plugin.saveSettings();
-								this.plugin.addCSS();
-							})
-					);	
-			}
+
+			new Setting(containerEl)
+				.setName("Hide")
+				.setDesc("Hide the key in Properties (in Live Preview or reading mode). The key continue to be visible in source mode.")
+				.addToggle((toggle) =>
+					toggle
+						.setValue(this.settings.linkToFile.hide)
+						.onChange(async (value) => {
+							this.settings.linkToFile.hide = value;
+							await this.plugin.saveSettings();
+							this.plugin.addCSS();
+						})
+				);
 		}
+
 
 		new Setting(containerEl)
 			.setHeading()
@@ -104,7 +121,7 @@ export class IconizeAssistantTab extends PluginSettingTab {
 			new Setting(containerEl)
 				.setName("Hide")
 				.setDesc("Hide the key in Properties (in Live Preview or reading mode). The key continue to be visible in source mode.")
-			
+
 				.addToggle((toggle) =>
 					toggle
 						.setValue(this.settings.iconName.hide)
@@ -113,11 +130,11 @@ export class IconizeAssistantTab extends PluginSettingTab {
 							await this.plugin.saveSettings();
 							this.plugin.addCSS();
 						})
-				);	
+				);
 		}
 
-		
-		
+
+
 		new Setting(containerEl)
 			.setName("Allow regex")
 			.setDesc("Sometimes, you didn't want the inheritance of the icon (used with regex rules in Iconize).")
@@ -128,8 +145,8 @@ export class IconizeAssistantTab extends PluginSettingTab {
 						this.settings.allowRegex = value;
 						await this.plugin.saveSettings();
 					})
-			);	
+			);
 	}
 
-	
+
 }

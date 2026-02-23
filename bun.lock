@@ -24,6 +24,8 @@
     },
   },
   "trustedDependencies": [
+    "electron",
+    "esbuild",
     "obsidian-typings",
   ],
   "packages": {

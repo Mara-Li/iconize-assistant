@@ -36,6 +36,8 @@
     "ts-dedent": "^2.2.0"
   },
   "trustedDependencies": [
+    "electron",
+    "esbuild",
     "obsidian-typings"
   ]
 }
