@@ -1,4 +1,4 @@
-import { normalizePath, Plugin, TFile, TFolder } from "obsidian";
+import { Component, normalizePath, Plugin, TFile, TFolder, setIcon } from "obsidian";
 import dedent from "dedent";
 import { Iconic } from "./iconic";
 import { Iconize } from "./iconize";
@@ -53,10 +53,35 @@ export default class IconizeAssistant extends Plugin {
 		}
 	}
 
+	async createFileForLucide(icon: string) {
+		if (this.settings.createLucideFile) {
+			const container = new DocumentFragment().createSpan();
+			setIcon(container, icon.replaceAll("lucide-", "").trim());
+			const svg = container.querySelector("svg");
+			if (!svg) throw new Error("SVG not found")
+			if (!svg.getAttribute("xmlns")) svg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+			const svgText = svg.outerHTML;
+			const lucideFolder = normalizePath(`${this.settings.iconFolderPath}/${this.settings.lucidePrefix}`)
+			const newFilePath = normalizePath(this.settings.iconFolderPath + `/${this.settings.lucidePrefix}/` + icon.replaceAll("lucide-", "") + ".svg");
+			const existing = this.app.vault.getAbstractFileByPath(newFilePath);
+			if (existing && existing instanceof TFile) return newFilePath;
+			else {
+				//create folder if not existe
+				if (!(await this.app.vault.exists(lucideFolder))) await this.app.vault.createFolder(lucideFolder);
+				await this.app.vault.create(newFilePath, svgText);
+			}
+			return newFilePath;
+		}
+	}
+
 	async getFileIcons(file: TFile) {
 		//get icons folder from another obsidian plugin
 		const fileIcon = await this.getIcon(file);
-		console.log(fileIcon);
+
+		if (fileIcon && fileIcon.startsWith("lucide-")) {
+			const path = await this.createFileForLucide(fileIcon);
+			if (path) return path.replace(`${this.settings.iconFolderPath}/`, "").replace(".svg", "");
+		}
 		const iconPack = (
 			await this.app.vault.adapter.list(this.settings.iconFolderPath)
 		).folders;
@@ -83,7 +108,7 @@ export default class IconizeAssistant extends Plugin {
 		const getIconAsFile = this.app.vault.getAbstractFileByPath(
 			normalizePath(`${this.settings.iconFolderPath}/${icon}.svg`),
 		);
-		console.log(`Get icon as file: ${getIconAsFile}`);
+		console.debug(`Get icon as file: ${getIconAsFile}`);
 		await this.app.fileManager.processFrontMatter(file, (frontmatter) => {
 			if (
 				getIconAsFile &&
@@ -161,7 +186,7 @@ export default class IconizeAssistant extends Plugin {
 		});
 	}
 	onunload() {
-		console.log(`IconFolderYaml v.${this.manifest.version} unloaded.`);
+		console.log(`Iconize assistant v.${this.manifest.version} unloaded.`);
 	}
 	async loadSettings() {
 		this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());

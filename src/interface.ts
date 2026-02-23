@@ -5,6 +5,8 @@ export interface IconizeAssistantSettings {
 	allowRegex: boolean;
 
 	useIconic: boolean;
+	createLucideFile: boolean;
+	lucidePrefix: string;
 }
 export const DEFAULT_SETTINGS: IconizeAssistantSettings = {
 	iconFolderPath: ".obsidian/.icons",
@@ -20,6 +22,8 @@ export const DEFAULT_SETTINGS: IconizeAssistantSettings = {
 	},
 	allowRegex: true,
 	useIconic: false,
+	createLucideFile: false,
+	lucidePrefix: "lucide"
 };
 
 export interface Icon {
