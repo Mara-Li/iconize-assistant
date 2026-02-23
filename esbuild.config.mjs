@@ -1,11 +1,11 @@
-import * as fs from "fs";
-import * as path from "path";
-import builtins from "builtin-modules";
+import { builtinModules as builtins } from "node:module";
 import { Command } from "commander";
 import esbuild from "esbuild";
+import * as fs from "fs";
+import * as path from "path";
+import { loadEnvFile } from "process";
 import manifest from "./manifest.json" with { type: "json" };
 import packageJson from "./package.json" with { type: "json" };
-import { loadEnvFile } from "process";
 
 // Initial configuration
 if (fs.existsSync(".env")) {
@@ -136,7 +136,7 @@ async function buildPlugin() {
 		minifyWhitespace: isProd,
 		outdir: outDir,
 		plugins: getPlugins(outDir),
-		pure: isProd ? ['console.debug'] : []
+		pure: isProd ? ["console.debug"] : [],
 	});
 
 	console.log(`🚀 ${isProd ? "Production" : "Development"} build`);
