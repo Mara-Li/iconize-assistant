@@ -4,6 +4,7 @@ import { Iconic } from "./iconic";
 import { Iconize } from "./iconize";
 import { DEFAULT_SETTINGS, IconizeAssistantSettings } from "./interface";
 import { IconizeAssistantTab } from "./settings";
+import { resources, translationLanguage } from "./i18n";
 
 export default class IconizeAssistant extends Plugin {
 	settings!: IconizeAssistantSettings;
@@ -162,6 +163,13 @@ export default class IconizeAssistant extends Plugin {
 
 	async onload() {
 		console.log(`Iconize Assistant v.${this.manifest.version} loaded.`);
+		await i18next.init({
+			lng: translationLanguage,
+			fallbackLng: "en",
+			resources,
+			returnNull: false,
+			returnEmptyString: false,
+		});
 		await this.loadSettings();
 		this.addSettingTab(new IconizeAssistantTab(this.app, this));
 		/** command that read the opened file and return the icon */
