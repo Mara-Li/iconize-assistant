@@ -1,50 +1,50 @@
 {
-  "settings": {
-    "useIconic": {
-      "title": "Utiliser Iconic",
-      "desc": "Utilisez les paramètres d'icônes (si vous utilisez my-svgs ou un autre plugin autorisant des icônes personnalisées)"
-    },
-    "createFolder": {
-      "desc": "Comme les icones lucide n'existent pas dans le coffre-fort, son utilisation ne fonctionne pas nativement par le plugin. \nDans ce cas, le plugin créera le fichier pour le lier.",
-      "title": "Créer un dossier lucide"
-    },
-    "folder": "Dossier",
-    "hide": {
-      "desc": "Masquez la clé dans Propriétés (en Live Preview ou en mode lecture). La clé continue d'être visible en mode source.",
-      "title": "Cacher"
-    },
-    "iconFile": {
-      "enable": {
-        "title": "Activer"
-      },
-      "title": "Fichier d'icône - Lien vers le frontmatter"
-    },
-    "iconFolderPath": "Chemin du dossier d'icônes",
-    "iconName": {
-      "desc": "L'icône sera sous la forme de « dossier/nom ».",
-      "title": "Nom de l'icône - Nom dans le frontmatter"
-    },
-    "linkToFile": {
-      "desc": "Nom dans le frontmatter/propriétés",
-      "title": "Nom"
-    },
-    "lucidePrefix": {
-      "desc": "Le fichier lucide sera créé dans votre dossier d'icônes. Le préfixe sera le nom du sous-dossier : <code>{0}/{1}</code>",
-      "title": "Préfixe Lucide"
-    },
-    "regex": {
-      "desc": "Parfois, vous ne souhaitiez pas l'héritage de l'icône (utilisée avec les règles regex dans Iconize).",
-      "title": "Autoriser les expressions régulières"
-    },
-    "fileMenu": "Ajoutez la commande dans le menu fichier",
-    "editorMenu": "Ajouter une commande dans le menu de l'éditeur",
-    "menu": {
-      "title": "Menus"
-    }
-  },
-  "error": {
-    "notFound": "Le plugin iconic n'a pas été trouvé.",
-    "svgNotFound": "SVG introuvable"
-  },
-  "commands": "Ajouter l'icône dans le frontmatter"
+	"settings": {
+		"useIconic": {
+			"title": "Utiliser Iconic",
+			"desc": "Utilisez les paramètres d'icônes (si vous utilisez my-svgs ou un autre plugin autorisant des icônes personnalisées)"
+		},
+		"createFolder": {
+			"desc": "Comme les icones lucide n'existent pas dans le coffre-fort, son utilisation ne fonctionne pas nativement par le plugin. \nDans ce cas, le plugin créera le fichier pour le lier.",
+			"title": "Créer un dossier lucide"
+		},
+		"folder": "Dossier",
+		"hide": {
+			"desc": "Masquez la clé dans Propriétés (en Live Preview ou en mode lecture). La clé continue d'être visible en mode source.",
+			"title": "Cacher"
+		},
+		"iconFile": {
+			"enable": {
+				"title": "Activer"
+			},
+			"title": "Fichier d'icône - Lien vers le frontmatter"
+		},
+		"iconFolderPath": "Chemin du dossier d'icônes",
+		"iconName": {
+			"desc": "L'icône sera sous la forme de « dossier/nom ».",
+			"title": "Nom de l'icône - Nom dans le frontmatter"
+		},
+		"linkToFile": {
+			"desc": "Nom dans le frontmatter/propriétés",
+			"title": "Nom"
+		},
+		"lucidePrefix": {
+			"desc": "Le fichier lucide sera créé dans votre dossier d'icônes. Le préfixe sera le nom du sous-dossier : <code>{0}/{1}</code>",
+			"title": "Préfixe Lucide"
+		},
+		"regex": {
+			"desc": "Parfois, vous ne souhaitiez pas l'héritage de l'icône (utilisée avec les règles regex dans Iconize).",
+			"title": "Autoriser les expressions régulières"
+		},
+		"fileMenu": "Ajoutez la commande dans le menu fichier",
+		"editorMenu": "Ajouter une commande dans le menu de l'éditeur",
+		"menu": {
+			"title": "Menus"
+		}
+	},
+	"error": {
+		"notFound": "Le plugin iconic n'a pas été trouvé.",
+		"svgNotFound": "SVG introuvable"
+	},
+	"commands": "Ajouter l'icône dans le frontmatter"
 }
