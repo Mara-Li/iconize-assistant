@@ -1,1 +1,51 @@
-{}
+{
+  "error": {
+    "notFound": "Iconic plugin is not found.",
+    "svgNotFound": "SVG not found",
+    "iconFolderNotFound": "The {{- path}} folder was not found."
+  },
+  "settings": {
+    "iconFolderPath": "Icon folder path",
+    "folder": "Folder",
+    "useIconic": {
+      "title": "Use iconic",
+      "desc": "Use iconic settings (if using my-svgs or other plugin that allow custom icons)"
+    },
+    "createFolder": {
+      "title": "Create lucide folder",
+      "desc": "As lucide icon doesn't exists in the vault, using it doesn't works natively by the plugin. In this case, the plugin will create the file to link it."
+    },
+    "lucidePrefix": {
+      "title": "Lucide prefix",
+      "desc": "The lucide file will be created in your icons folder. The prefix will be the subfolder name: <code>{0}/{1}</code>"
+    },
+    "iconFile": {
+      "title": "Icon File - Link into frontmatter",
+      "enable": {
+        "title": "Enable"
+      }
+    },
+    "linkToFile": {
+      "title": "Name",
+      "desc": "Name in the frontmatter/properties"
+    },
+    "hide": {
+      "title": "Hide",
+      "desc": "Hide the key in Properties (in Live Preview or reading mode). The key continue to be visible in source mode."
+    },
+    "iconName": {
+      "title": "Icon Name - Name into frontmatter",
+      "desc": "Icon will be in the form of \"folder/name\"."
+    },
+    "regex": {
+      "title": "Allow regex",
+      "desc": "Sometimes, you didn't want the inheritance of the icon (used with regex rules in Iconize)."
+    },
+    "menu": {
+      "title": "Menus"
+    },
+    "editorMenu": "Add command on editor menu",
+    "fileMenu": "Add the command in the file menu"
+  },
+  "commands": "Set file icon in frontmatter"
+}

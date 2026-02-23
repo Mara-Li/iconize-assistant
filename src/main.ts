@@ -60,7 +60,7 @@ export default class IconizeAssistant extends Plugin {
 			const container = new DocumentFragment().createSpan();
 			setIcon(container, icon.replaceAll("lucide-", "").trim());
 			const svg = container.querySelector("svg");
-			if (!svg) throw new Error("SVG not found");
+			if (!svg) throw new Error(i18next.t("error.svgNotFound"));
 			if (!svg.getAttribute("xmlns"))
 				svg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
 			const svgText = svg.outerHTML;
@@ -73,12 +73,14 @@ export default class IconizeAssistant extends Plugin {
 					icon.replaceAll("lucide-", "") +
 					".svg",
 			);
-			const existing = this.app.vault.getAbstractFileByPath(newFilePath);
-			if (existing && existing instanceof TFile) return newFilePath;
+			const existing =
+				this.app.vault.getAbstractFileByPathInsensitive(newFilePath);
+			if (existing instanceof TFile) return newFilePath;
 			else {
 				//create folder if not existe
-				if (!(await this.app.vault.exists(lucideFolder)))
+				if (!(await this.app.vault.exists(lucideFolder, true)))
 					await this.app.vault.createFolder(lucideFolder);
+
 				await this.app.vault.create(newFilePath, svgText);
 			}
 			return newFilePath;
@@ -87,6 +89,13 @@ export default class IconizeAssistant extends Plugin {
 
 	async getFileIcons(file: TFile) {
 		//get icons folder from another obsidian plugin
+		if (!(await this.app.vault.exists(this.settings.iconFolderPath))) {
+			//create the folder if not exist
+			if (this.settings.iconFolderPath.startsWith(".obsidian")) {
+				await this.app.vault.adapter.mkdir(this.settings.iconFolderPath);
+			} else await this.app.vault.createFolder(this.settings.iconFolderPath);
+			return null;
+		}
 		const fileIcon = await this.getIcon(file);
 
 		if (fileIcon && fileIcon.startsWith("lucide-")) {
@@ -96,33 +105,37 @@ export default class IconizeAssistant extends Plugin {
 					.replace(`${this.settings.iconFolderPath}/`, "")
 					.replace(".svg", "");
 		}
-		const iconPack = (
-			await this.app.vault.adapter.list(this.settings.iconFolderPath)
-		).folders;
-		const allPackPrefix = iconPack.map((pack) => {
-			return {
-				pack,
-				prefix: this.createIconPackPrefix(pack.split("/").pop() as string),
-			};
-		});
-		if (fileIcon) {
-			const packPrefix = allPackPrefix.find((pack) => {
-				return fileIcon.startsWith(pack.prefix);
+		try {
+			const iconPack = (
+				await this.app.vault.adapter.list(this.settings.iconFolderPath)
+			).folders;
+			const allPackPrefix = iconPack.map((pack) => {
+				return {
+					pack,
+					prefix: this.createIconPackPrefix(pack.split("/").pop() as string),
+				};
 			});
-			if (packPrefix) {
-				const iconPath = `${packPrefix.pack}/${fileIcon.replace(packPrefix.prefix, "")}`;
-				//remove obsidian folder from path
-				return iconPath.replace(`${this.settings.iconFolderPath}/`, "");
+			if (fileIcon) {
+				const packPrefix = allPackPrefix.find((pack) => {
+					return fileIcon.startsWith(pack.prefix);
+				});
+				if (packPrefix) {
+					const iconPath = `${packPrefix.pack}/${fileIcon.replace(packPrefix.prefix, "")}`;
+					//remove obsidian folder from path
+					return iconPath.replace(`${this.settings.iconFolderPath}/`, "");
+				}
 			}
+			return null;
+		} catch (e) {
+			console.error("Error getting file icons: ", e);
+			return null;
 		}
-		return null;
 	}
 
 	async editFrontmatter(file: TFile, icon: string) {
-		const getIconAsFile = this.app.vault.getAbstractFileByPath(
+		const getIconAsFile = this.app.vault.getAbstractFileByPathInsensitive(
 			normalizePath(`${this.settings.iconFolderPath}/${icon}.svg`),
 		);
-		console.debug(`Get icon as file: ${getIconAsFile}`);
 		await this.app.fileManager.processFrontMatter(file, (frontmatter) => {
 			if (
 				getIconAsFile &&
@@ -188,7 +201,7 @@ export default class IconizeAssistant extends Plugin {
 		/** command that read the opened file and return the icon */
 		this.addCommand({
 			id: "set-file-icon",
-			name: "Set file icon in frontmatter",
+			name: i18next.t("commands"),
 			// @ts-ignore
 			checkCallback: async (checking) => {
 				const file = this.app.workspace.getActiveFile();
@@ -205,6 +218,41 @@ export default class IconizeAssistant extends Plugin {
 				return false;
 			},
 		});
+
+		this.registerEvent(
+			this.app.workspace.on("editor-menu", (menu, _editor, info) => {
+				if (!this.settings.addEditorMenu) return;
+				const file = info.file;
+				if (!file) return;
+				menu.addItem((item) =>
+					item
+						.setTitle(i18next.t("commands"))
+						.setIcon("file-type")
+						.onClick(async () => {
+							const icon = await this.getFileIcons(file);
+							if (!icon) return;
+							await this.editFrontmatter(file, icon);
+						}),
+				);
+			}),
+		);
+
+		this.registerEvent(
+			this.app.workspace.on("file-menu", async (menu, file) => {
+				if (!this.settings.addFileMenu) return;
+				if (!(file instanceof TFile)) return;
+				menu.addItem((item) =>
+					item
+						.setTitle(i18next.t("commands"))
+						.setIcon("file-type")
+						.onClick(async () => {
+							const icon = await this.getFileIcons(file);
+							if (!icon) return;
+							await this.editFrontmatter(file, icon);
+						}),
+				);
+			}),
+		);
 	}
 	onunload() {
 		console.log(`Iconize assistant v.${this.manifest.version} unloaded.`);

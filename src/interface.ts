@@ -7,6 +7,8 @@ export interface IconizeAssistantSettings {
 	useIconic: boolean;
 	createLucideFile: boolean;
 	lucidePrefix: string;
+	addEditorMenu: boolean;
+	addFileMenu: boolean;
 }
 export const DEFAULT_SETTINGS: IconizeAssistantSettings = {
 	iconFolderPath: ".obsidian/.icons",
@@ -24,6 +26,8 @@ export const DEFAULT_SETTINGS: IconizeAssistantSettings = {
 	useIconic: false,
 	createLucideFile: false,
 	lucidePrefix: "lucide",
+	addEditorMenu: true,
+	addFileMenu: true,
 };
 
 export interface Icon {

@@ -1,3 +1,4 @@
+import i18next from "i18next";
 import { App, PluginSettingTab, Setting, sanitizeHTMLToDom } from "obsidian";
 import { FolderSuggester } from "./folder";
 import { IconizeAssistantSettings } from "./interface";
@@ -17,19 +18,21 @@ export class IconizeAssistantTab extends PluginSettingTab {
 		const { containerEl } = this;
 		containerEl.empty();
 
-		new Setting(containerEl).setName("Icon folder path").addSearch((cb) => {
-			cb.setPlaceholder("Folder").setValue(this.settings.iconFolderPath);
-			new FolderSuggester(cb.inputEl, this.app, async (result) => {
-				this.settings.iconFolderPath = result.trim();
-				await this.plugin.saveSettings();
+		new Setting(containerEl)
+			.setName(i18next.t("settings.iconFolderPath"))
+			.addSearch((cb) => {
+				cb.setPlaceholder(i18next.t("settings.folder")).setValue(
+					this.settings.iconFolderPath,
+				);
+				new FolderSuggester(cb.inputEl, this.app, async (result) => {
+					this.settings.iconFolderPath = result.trim();
+					await this.plugin.saveSettings();
+				});
 			});
-		});
 
 		new Setting(containerEl)
-			.setName("Use iconic")
-			.setDesc(
-				"Use iconic settings (if using my-svgs or other plugin that allow custom icons)",
-			)
+			.setName(i18next.t("settings.useIconic.title"))
+			.setDesc(i18next.t("settings.useIconic.desc"))
 			.addToggle((toggle) =>
 				toggle.setValue(this.settings.useIconic).onChange(async (val) => {
 					this.settings.useIconic = val;
@@ -40,10 +43,8 @@ export class IconizeAssistantTab extends PluginSettingTab {
 
 		if (this.settings.useIconic) {
 			new Setting(containerEl)
-				.setName("Create lucide folder")
-				.setDesc(
-					"As lucide icon doesn't exists in the vault, using it doesn't works natively by the plugin. In this case, the plugin will create the file to link it.",
-				)
+				.setName(i18next.t("settings.createFolder.title"))
+				.setDesc(i18next.t("settings.createFolder.desc"))
 				.addToggle((toggle) =>
 					toggle
 						.setValue(this.settings.createLucideFile)
@@ -56,10 +57,13 @@ export class IconizeAssistantTab extends PluginSettingTab {
 
 			if (this.settings.createLucideFile) {
 				new Setting(containerEl)
-					.setName("Lucide prefix")
+					.setName(i18next.t("settings.lucidePrefix.title"))
 					.setDesc(
 						sanitizeHTMLToDom(
-							`The lucide file will be created in your icons folder. The prefix will be the subfolder name: <code>${this.settings.iconFolderPath}/${this.settings.lucidePrefix}</code>`,
+							i18next.t("settings.lucidePrefix.desc", {
+								0: this.settings.iconFolderPath,
+								1: this.settings.lucidePrefix,
+							}),
 						),
 					)
 					.addText((text) =>
@@ -73,23 +77,25 @@ export class IconizeAssistantTab extends PluginSettingTab {
 
 		new Setting(containerEl)
 			.setHeading()
-			.setName("Icon File - Link into frontmatter");
+			.setName(i18next.t("settings.iconFile.title"));
 
-		new Setting(containerEl).setName("Enable").addToggle((toggle) =>
-			toggle
-				.setValue(this.settings.linkToFile.enable)
-				.onChange(async (value) => {
-					this.settings.linkToFile.enable = value;
-					await this.plugin.saveSettings();
-					this.display();
-					this.plugin.addCSS();
-				}),
-		);
+		new Setting(containerEl)
+			.setName(i18next.t("settings.iconFile.enable.title"))
+			.addToggle((toggle) =>
+				toggle
+					.setValue(this.settings.linkToFile.enable)
+					.onChange(async (value) => {
+						this.settings.linkToFile.enable = value;
+						await this.plugin.saveSettings();
+						this.display();
+						this.plugin.addCSS();
+					}),
+			);
 
 		if (this.settings.linkToFile.enable) {
 			new Setting(containerEl)
-				.setName("Name")
-				.setDesc("Name in the frontmatter/properties")
+				.setName(i18next.t("settings.linkToFile.title"))
+				.setDesc(i18next.t("settings.linkToFile.desc"))
 				.addText((text) =>
 					text
 						.setValue(this.settings.linkToFile.name)
@@ -101,10 +107,8 @@ export class IconizeAssistantTab extends PluginSettingTab {
 				);
 
 			new Setting(containerEl)
-				.setName("Hide")
-				.setDesc(
-					"Hide the key in Properties (in Live Preview or reading mode). The key continue to be visible in source mode.",
-				)
+				.setName(i18next.t("settings.hide.title"))
+				.setDesc(i18next.t("settings.hide.desc"))
 				.addToggle((toggle) =>
 					toggle
 						.setValue(this.settings.linkToFile.hide)
@@ -118,22 +122,26 @@ export class IconizeAssistantTab extends PluginSettingTab {
 
 		new Setting(containerEl)
 			.setHeading()
-			.setName("Icon Name - Name into frontmatter")
-			.setDesc('Icon will be in the form of "folder/name".');
+			.setName(i18next.t("settings.iconName.title"))
+			.setDesc(i18next.t("settings.iconName.desc"));
 
-		new Setting(containerEl).setName("Enable").addToggle((toggle) =>
-			toggle.setValue(this.settings.iconName.enable).onChange(async (value) => {
-				this.settings.iconName.enable = value;
-				await this.plugin.saveSettings();
-				this.display();
-				this.plugin.addCSS();
-			}),
-		);
+		new Setting(containerEl)
+			.setName(i18next.t("settings.iconFile.enable.title"))
+			.addToggle((toggle) =>
+				toggle
+					.setValue(this.settings.iconName.enable)
+					.onChange(async (value) => {
+						this.settings.iconName.enable = value;
+						await this.plugin.saveSettings();
+						this.display();
+						this.plugin.addCSS();
+					}),
+			);
 
 		if (this.settings.iconName.enable) {
 			new Setting(containerEl)
-				.setName("Name")
-				.setDesc("Name in the frontmatter/properties")
+				.setName(i18next.t("settings.linkToFile.title"))
+				.setDesc(i18next.t("settings.linkToFile.desc"))
 				.addText((text) =>
 					text.setValue(this.settings.iconName.name).onChange(async (value) => {
 						this.settings.iconName.name = value;
@@ -143,10 +151,8 @@ export class IconizeAssistantTab extends PluginSettingTab {
 				);
 
 			new Setting(containerEl)
-				.setName("Hide")
-				.setDesc(
-					"Hide the key in Properties (in Live Preview or reading mode). The key continue to be visible in source mode.",
-				)
+				.setName(i18next.t("settings.hide.title"))
+				.setDesc(i18next.t("settings.hide.desc"))
 
 				.addToggle((toggle) =>
 					toggle
@@ -158,15 +164,34 @@ export class IconizeAssistantTab extends PluginSettingTab {
 						}),
 				);
 		}
+		if (!this.settings.useIconic)
+			new Setting(containerEl)
+				.setName(i18next.t("settings.regex.title"))
+				.setDesc(i18next.t("settings.regex.desc"))
+				.addToggle((toggle) =>
+					toggle.setValue(this.settings.allowRegex).onChange(async (value) => {
+						this.settings.allowRegex = value;
+						await this.plugin.saveSettings();
+					}),
+				);
 
 		new Setting(containerEl)
-			.setName("Allow regex")
-			.setDesc(
-				"Sometimes, you didn't want the inheritance of the icon (used with regex rules in Iconize).",
-			)
+			.setHeading()
+			.setName(i18next.t("settings.menu.title"));
+
+		new Setting(containerEl)
+			.setName(i18next.t("settings.editorMenu"))
 			.addToggle((toggle) =>
-				toggle.setValue(this.settings.allowRegex).onChange(async (value) => {
-					this.settings.allowRegex = value;
+				toggle.setValue(this.settings.addEditorMenu).onChange(async (value) => {
+					this.settings.addEditorMenu = value;
+					await this.plugin.saveSettings();
+				}),
+			);
+		new Setting(containerEl)
+			.setName(i18next.t("settings.fileMenu"))
+			.addToggle((toggle) =>
+				toggle.setValue(this.settings.addFileMenu).onChange(async (value) => {
+					this.settings.addFileMenu = value;
 					await this.plugin.saveSettings();
 				}),
 			);

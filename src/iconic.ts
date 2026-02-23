@@ -3,6 +3,7 @@
  *
  */
 
+import i18next from "i18next";
 import type { App, Plugin, TFile } from "obsidian";
 import type IconizeAssistant from "./main";
 
@@ -38,7 +39,8 @@ export class Iconic {
 		this.app = app;
 		this.plugin = plugin;
 		const iconic = this.app.plugins.getPlugin("iconic");
-		if (!iconic) throw new Error("Iconic is not found");
+		if (!iconic)
+			throw new Error(i18next.t("error.notFound", { plugin: "Iconic" }));
 		this.iconic = iconic;
 	}
 
