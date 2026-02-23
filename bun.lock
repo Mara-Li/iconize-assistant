@@ -8,7 +8,6 @@
         "@biomejs/biome": "^2.4.4",
         "@lisandra-dev/eslint-config": "^1.1.6",
         "commit-and-tag-version": "^12.6.1",
-        "obsidian-undocumented": "^0.1.3",
         "ts-dedent": "^2.2.0",
       },
       "devDependencies": {
@@ -1090,8 +1089,6 @@
     "obsidian-plugin-cli": ["obsidian-plugin-cli@0.9.0", "", { "dependencies": { "@oclif/command": "1.8.36", "@oclif/config": "1.18.17", "@oclif/plugin-help": "3.3.1", "@zephraph/procedure": "0.2.1", "ansi-colors": "4.1.3", "cosmiconfig": "7.1.0", "dedent": "0.7.0", "esbuild": "0.12.29", "obsidian-utils": "0.10.2", "prompts": "2.4.2", "tslib": "1.14.1", "update-notifier": "5.1.0" }, "bin": { "obsidian-plugin": "bin/run" } }, "sha512-V62+WF+tBFMajBXopO85XwxXAbIAocWwKYPWRNDb2CIIPE5JJJoSVC5ZQ/o2kLP+3A38Om1YUiBtzJ/2kbbm3g=="],
 
     "obsidian-typings": ["obsidian-typings@4.100.0", "", { "dependencies": { "@antfu/utils": "9.2.0", "@capacitor/core": "5.7.8", "@codemirror/language": "6.11.2", "@codemirror/search": "6.5.11", "@codemirror/state": "6.5.0", "@codemirror/view": "6.38.6", "@lezer/common": "1.2.3", "@pixi/color": "7.2.4", "@pixi/events": "7.2.4", "@pixi/settings": "7.2.4", "@types/codemirror": "5.60.8", "@types/css-font-loading-module": "0.0.14", "@types/dompurify": "3.0.1", "@types/node": "25.0.3", "@types/prismjs": "1.26.5", "@types/turndown": "5.0.5", "colord": "2.9.3", "electron": "39.2.7", "i18next": "25.2.1", "mermaid": "11.4.1", "obsidian": "1.12.2", "pdfjs-dist": "5.3.31", "pixi.js": "7.2.4", "scrypt-js": "3.0.1", "style-mod": "4.1.3", "type-fest": "5.3.1" }, "peerDependencies": { "typescript": ">=4.8.0" } }, "sha512-4hqZFPjNjUkAksKzZOZ5MWWb3lyYOt9UCAU4jX/LttktFdlA1uopSEu31uO8dvEYUt3YUBbFnSZQndqttbMIJw=="],
-
-    "obsidian-undocumented": ["obsidian-undocumented@0.1.3", "", { "peerDependencies": { "obsidian": "1.4.11" } }, "sha512-JjJuY8aepETPMumGwleq/lVa7gM7yfQxbVbk83sim21wZv6oo2v2GA/KZf62pO5Jri37Lj6XWVlqnxQKSQ/9Hw=="],
 
     "obsidian-utils": ["obsidian-utils@0.10.2", "", { "dependencies": { "date-fns": "2.30.0", "execa": "5.1.1", "node-fetch": "2.7.0", "which": "2.0.2" } }, "sha512-LvD098hza7o+WnM7ra39xsvSazrjSLjynDsiMlCAE5Nv/mCcbYex72WeZkZ32TqdXLspTjfiI0pgRhKH4VuNEQ=="],
 

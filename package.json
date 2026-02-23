@@ -32,7 +32,6 @@
     "@biomejs/biome": "^2.4.4",
     "@lisandra-dev/eslint-config": "^1.1.6",
     "commit-and-tag-version": "^12.6.1",
-    "obsidian-undocumented": "^0.1.3",
     "ts-dedent": "^2.2.0"
   },
   "trustedDependencies": [
