@@ -49,12 +49,3 @@ bun run build
 > **Note**
 > You can use the `.env` file with adding the key `VAULT_DEV` to specify the path to your Obsidian (development) vault. This will allow you to test your plugin without specify each times the path to the vault.
 
-### 📤 Export
-
-You can use the `pnpm run export` command to export your plugin to your Obsidian Main Vault. To do that, you need the `.env` file with the following content:
-
-```json
-VAULT="path/to/your/obsidian/vault"
-VAULT_DEV="path/to/your/dev/vault"
-```
-
