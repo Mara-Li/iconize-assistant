@@ -11,11 +11,11 @@ export type Rule = {
 	useFilePath?: boolean;
 };
 
-export type IconFile = Record<string, string>
+export type IconFile = Record<string, string>;
 
 export class Iconize {
 	app: App;
-	settings: IconizeAssistantSettings
+	settings: IconizeAssistantSettings;
 	plugin: IconizeAssistant;
 
 	constructor(app: App, plugin: IconizeAssistant) {
@@ -33,8 +33,6 @@ export class Iconize {
 			);
 		});
 	}
-
-
 
 	async getFileIcon(file: TFile) {
 		const data = await this.loadData();
@@ -60,6 +58,6 @@ export class Iconize {
 		//remove "settings" from data
 		delete data.settings;
 		const icon = data as IconFile;
-		return { rules, icon }
+		return { rules, icon };
 	}
 }

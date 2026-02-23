@@ -5,26 +5,25 @@
   "main": "lib/main.js",
   "license": "GPL-3.0-only",
   "scripts": {
-    "build": "obsidian-plugin build src/main.ts",
-    "dev": "node dev.js",
-    "lint:fix": "eslint --ext .ts,.js,.json src --fix",
-    "lint": "eslint --ext .ts src",
-    "bump": "node commit-and-tag-version.js",
-    "preexport": "pnpm run build",
-    "export": "node export.js",
+    "prebuild": "tsc --noEmit --skipLibCheck",
+    "build": "node esbuild.config.mjs --production",
+    "dev:prod": "node esbuild.config.mjs --vault",
+    "dev": "node esbuild.config.mjs",
+    "export": "node esbuild.config.mjs --production --vault",
+    "bump": "dotenv -- node commit-and-tag-version.mjs",
+    "postbump": "dotenv -- if-env SKIP_POST_BUMP=true && echo skip bump || git push --follow-tags origin master",
     "predeploy": "pnpm run bump",
-    "deploy": "pnpm run export"
+    "deploy": "pnpm run export",
+    "lint": "biome check --write ./src/ --unsafe"
   },
   "commit-and-tag-version": {
     "t": ""
   },
   "devDependencies": {
     "ansi-colors": "^4.1.3",
-    "builtin-modules": "^3.3.0",
     "commander": "^12.1.0",
     "dedent": "^1.7.1",
     "obsidian": "^1.12.2",
-    "obsidian-plugin-cli": "^0.9.0",
     "obsidian-typings": "^4.100.0",
     "typescript": "^5.9.3"
   },

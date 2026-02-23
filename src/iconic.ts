@@ -20,11 +20,14 @@ type Rules = {
 	enabled?: boolean;
 };
 
-type FileIcons = Record<string, {
-	icon?: string;
-	color?: string;
-	unsynced?: string[];
-}>;
+type FileIcons = Record<
+	string,
+	{
+		icon?: string;
+		color?: string;
+		unsynced?: string[];
+	}
+>;
 
 export class Iconic {
 	app: App;
@@ -80,7 +83,10 @@ export class Iconic {
 		return false;
 	}
 
-	private searchIfApplicable(fileRules: Rules[], path: string): undefined | Rules {
+	private searchIfApplicable(
+		fileRules: Rules[],
+		path: string,
+	): undefined | Rules {
 		return fileRules.find((rule: any) => {
 			return rule.enabled && this.any([path], rule.operator, rule.value);
 		});
@@ -106,7 +112,7 @@ export class Iconic {
 		if (fileIcon?.icon) return fileIcon.icon;
 		if (isFolder && fileIcons[isFolder]?.icon) return fileIcons[isFolder].icon;
 		const rule = this.searchIfApplicable(rules, file.path);
-		if (rule?.icon) return rule.icon
+		if (rule?.icon) return rule.icon;
 		return null;
 	}
 }

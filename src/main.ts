@@ -1,13 +1,9 @@
 import { normalizePath, Plugin, TFile, TFolder } from "obsidian";
 import dedent from "ts-dedent";
-
-import {
-	DEFAULT_SETTINGS,
-	IconizeAssistantSettings,
-} from "./interface";
-import { IconizeAssistantTab } from "./settings";
 import { Iconic } from "./iconic";
 import { Iconize } from "./iconize";
+import { DEFAULT_SETTINGS, IconizeAssistantSettings } from "./interface";
+import { IconizeAssistantTab } from "./settings";
 
 export default class IconizeAssistant extends Plugin {
 	settings!: IconizeAssistantSettings;
@@ -60,7 +56,9 @@ export default class IconizeAssistant extends Plugin {
 	async getFileIcons(file: TFile) {
 		//get icons folder from another obsidian plugin
 		const fileIcon = await this.getIcon(file);
-		const iconPack = (await this.app.vault.adapter.list(this.settings.iconFolderPath)).folders;
+		const iconPack = (
+			await this.app.vault.adapter.list(this.settings.iconFolderPath)
+		).folders;
 		const allPackPrefix = iconPack.map((pack) => {
 			return {
 				pack,

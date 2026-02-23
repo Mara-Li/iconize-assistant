@@ -28,8 +28,6 @@ export interface Icon {
 	prefix: string;
 }
 
-
-
 type FrontmatterSettings = {
 	enable: boolean;
 	name: string;
