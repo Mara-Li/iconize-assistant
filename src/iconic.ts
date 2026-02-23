@@ -3,7 +3,7 @@
  *
  */
 
-import type { App, TFile, Plugin } from "obsidian";
+import type { App, Plugin, TFile } from "obsidian";
 import type IconizeAssistant from "./main";
 
 type Rules = {
@@ -42,7 +42,6 @@ export class Iconic {
 		this.iconic = iconic;
 	}
 
-
 	getFileItemFromTFile(tfile: TFile) {
 		//@ts-ignore
 		const items = this.iconic.getFileItems?.() ?? [];
@@ -57,13 +56,13 @@ export class Iconic {
 
 	private searchIfApplicable(
 		fileRules: Rules[],
-		file: TFile
+		file: TFile,
 	): undefined | Rules {
 		const fileItem = this.getFileItemFromTFile(file);
 		for (const rule of fileRules) {
 			//@ts-ignore
 			if (this.iconic.ruleManager.judgeFile(fileItem, rule, Date())) {
-				return rule
+				return rule;
 			}
 		}
 	}

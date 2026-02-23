@@ -1,10 +1,11 @@
-import { Component, normalizePath, Plugin, TFile, TFolder, setIcon } from "obsidian";
 import dedent from "dedent";
+import i18next from "i18next";
+import { normalizePath, Plugin, setIcon, TFile, TFolder } from "obsidian";
+import { resources, translationLanguage } from "./i18n";
 import { Iconic } from "./iconic";
 import { Iconize } from "./iconize";
 import { DEFAULT_SETTINGS, IconizeAssistantSettings } from "./interface";
 import { IconizeAssistantTab } from "./settings";
-import { resources, translationLanguage } from "./i18n";
 
 export default class IconizeAssistant extends Plugin {
 	settings!: IconizeAssistantSettings;
@@ -59,16 +60,25 @@ export default class IconizeAssistant extends Plugin {
 			const container = new DocumentFragment().createSpan();
 			setIcon(container, icon.replaceAll("lucide-", "").trim());
 			const svg = container.querySelector("svg");
-			if (!svg) throw new Error("SVG not found")
-			if (!svg.getAttribute("xmlns")) svg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+			if (!svg) throw new Error("SVG not found");
+			if (!svg.getAttribute("xmlns"))
+				svg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
 			const svgText = svg.outerHTML;
-			const lucideFolder = normalizePath(`${this.settings.iconFolderPath}/${this.settings.lucidePrefix}`)
-			const newFilePath = normalizePath(this.settings.iconFolderPath + `/${this.settings.lucidePrefix}/` + icon.replaceAll("lucide-", "") + ".svg");
+			const lucideFolder = normalizePath(
+				`${this.settings.iconFolderPath}/${this.settings.lucidePrefix}`,
+			);
+			const newFilePath = normalizePath(
+				this.settings.iconFolderPath +
+					`/${this.settings.lucidePrefix}/` +
+					icon.replaceAll("lucide-", "") +
+					".svg",
+			);
 			const existing = this.app.vault.getAbstractFileByPath(newFilePath);
 			if (existing && existing instanceof TFile) return newFilePath;
 			else {
 				//create folder if not existe
-				if (!(await this.app.vault.exists(lucideFolder))) await this.app.vault.createFolder(lucideFolder);
+				if (!(await this.app.vault.exists(lucideFolder)))
+					await this.app.vault.createFolder(lucideFolder);
 				await this.app.vault.create(newFilePath, svgText);
 			}
 			return newFilePath;
@@ -81,7 +91,10 @@ export default class IconizeAssistant extends Plugin {
 
 		if (fileIcon && fileIcon.startsWith("lucide-")) {
 			const path = await this.createFileForLucide(fileIcon);
-			if (path) return path.replace(`${this.settings.iconFolderPath}/`, "").replace(".svg", "");
+			if (path)
+				return path
+					.replace(`${this.settings.iconFolderPath}/`, "")
+					.replace(".svg", "");
 		}
 		const iconPack = (
 			await this.app.vault.adapter.list(this.settings.iconFolderPath)

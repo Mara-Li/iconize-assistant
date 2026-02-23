@@ -1,4 +1,4 @@
-import { App, PluginSettingTab, sanitizeHTMLToDom, Setting } from "obsidian";
+import { App, PluginSettingTab, Setting, sanitizeHTMLToDom } from "obsidian";
 import { FolderSuggester } from "./folder";
 import { IconizeAssistantSettings } from "./interface";
 import IconizeAssistant from "./main";
@@ -41,25 +41,33 @@ export class IconizeAssistantTab extends PluginSettingTab {
 		if (this.settings.useIconic) {
 			new Setting(containerEl)
 				.setName("Create lucide folder")
-				.setDesc("As lucide icon doesn't exists in the vault, using it doesn't works natively by the plugin. In this case, the plugin will create the file to link it.")
-				.addToggle((toggle) => toggle.setValue(this.settings.createLucideFile).onChange(async (value) => {
-					this.settings.createLucideFile = value;
-					await this.plugin.saveSettings();
-					this.display()
-				}
-				))
+				.setDesc(
+					"As lucide icon doesn't exists in the vault, using it doesn't works natively by the plugin. In this case, the plugin will create the file to link it.",
+				)
+				.addToggle((toggle) =>
+					toggle
+						.setValue(this.settings.createLucideFile)
+						.onChange(async (value) => {
+							this.settings.createLucideFile = value;
+							await this.plugin.saveSettings();
+							this.display();
+						}),
+				);
 
 			if (this.settings.createLucideFile) {
 				new Setting(containerEl)
 					.setName("Lucide prefix")
-					.setDesc(sanitizeHTMLToDom(`The lucide file will be created in your icons folder. The prefix will be the subfolder name: <code>${this.settings.iconFolderPath}/${this.settings.lucidePrefix}</code>`))
-					.addText(text =>
-						text.setValue(this.settings.lucidePrefix)
-							.onChange(async (val) => {
-								this.settings.lucidePrefix = val;
-								await this.plugin.saveSettings();
-							})
+					.setDesc(
+						sanitizeHTMLToDom(
+							`The lucide file will be created in your icons folder. The prefix will be the subfolder name: <code>${this.settings.iconFolderPath}/${this.settings.lucidePrefix}</code>`,
+						),
 					)
+					.addText((text) =>
+						text.setValue(this.settings.lucidePrefix).onChange(async (val) => {
+							this.settings.lucidePrefix = val;
+							await this.plugin.saveSettings();
+						}),
+					);
 			}
 		}
 

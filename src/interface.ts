@@ -23,7 +23,7 @@ export const DEFAULT_SETTINGS: IconizeAssistantSettings = {
 	allowRegex: true,
 	useIconic: false,
 	createLucideFile: false,
-	lucidePrefix: "lucide"
+	lucidePrefix: "lucide",
 };
 
 export interface Icon {
