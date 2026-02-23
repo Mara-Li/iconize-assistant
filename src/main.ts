@@ -1,14 +1,13 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { normalizePath, Plugin, TFile, TFolder } from "obsidian";
 import dedent from "ts-dedent";
 
 import {
 	DEFAULT_SETTINGS,
-	IconFile,
 	IconizeAssistantSettings,
-	Rule,
 } from "./interface";
 import { IconizeAssistantTab } from "./settings";
+import { Iconic } from "./iconic";
+import { Iconize } from "./iconize";
 
 export default class IconizeAssistant extends Plugin {
 	settings!: IconizeAssistantSettings;
@@ -26,16 +25,6 @@ export default class IconizeAssistant extends Plugin {
 			iconPackName.charAt(0).toUpperCase() +
 			iconPackName.charAt(1).toLowerCase()
 		);
-	}
-
-	searchIfApplicable(rules: Rule[], path: string): undefined | Rule {
-		if (!this.settings.allowRegex) return undefined;
-		return rules.find((rule: any) => {
-			const regex = new RegExp(rule.rule);
-			return (
-				(rule.for === "everything" || rule.for === "files") && regex.test(path)
-			);
-		});
 	}
 
 	/**
@@ -58,32 +47,20 @@ export default class IconizeAssistant extends Plugin {
 		return undefined;
 	}
 
+	getIcon(file: TFile) {
+		if (this.settings.useIconic) {
+			const iconic = new Iconic(this.app, this);
+			return iconic.getFileIcon(file);
+		} else {
+			const iconize = new Iconize(this.app, this);
+			return iconize.getFileIcon(file);
+		}
+	}
+
 	async getFileIcons(file: TFile) {
 		//get icons folder from another obsidian plugin
-		const obsidianIconFolder = this.app.plugins.getPlugin(
-			"obsidian-icon-folder",
-		);
-		const data = await obsidianIconFolder?.loadData();
-		const rules = data.settings.rules as Rule[];
-		const iconFolder = data.settings.iconPacksPath as string;
-
-		//remove "settings" from data
-		delete data.settings;
-		const icon = data as IconFile;
-		/**
-		 * Add the key "type" to the object
-		 * based of the file extension
-		 * If no extension = "folder"
-		 * else "file"
-		 */
-		const path = file.path;
-		const isFolder = this.findFolderNote(file)?.path;
-		const fileIcon: string | null = icon[path]
-			? icon[path as string].toString()
-			: isFolder && icon[isFolder]
-				? icon[isFolder].toString()
-				: null;
-		const iconPack = (await this.app.vault.adapter.list(iconFolder)).folders;
+		const fileIcon = await this.getIcon(file);
+		const iconPack = (await this.app.vault.adapter.list(this.settings.iconFolderPath)).folders;
 		const allPackPrefix = iconPack.map((pack) => {
 			return {
 				pack,
@@ -97,17 +74,7 @@ export default class IconizeAssistant extends Plugin {
 			if (packPrefix) {
 				const iconPath = `${packPrefix.pack}/${fileIcon.replace(packPrefix.prefix, "")}`;
 				//remove obsidian folder from path
-				return iconPath.replace(`${iconFolder}/`, "");
-			}
-		} else if (this.searchIfApplicable(rules, path)) {
-			const iconPath = this.searchIfApplicable(rules, path)?.icon;
-			const packPrefix = allPackPrefix.find((pack) => {
-				return iconPath?.startsWith(pack.prefix);
-			});
-			if (packPrefix) {
-				const folderIconPath = `${packPrefix.pack}/${iconPath?.replace(packPrefix.prefix, "")}`;
-				//remove obsidian folder from path
-				return folderIconPath.replace(`${iconFolder}/`, "");
+				return iconPath.replace(`${this.settings.iconFolderPath}/`, "");
 			}
 		}
 		return null;

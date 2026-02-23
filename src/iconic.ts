@@ -3,7 +3,8 @@
  *
  */
 
-import type { App } from "obsidian";
+import type { App, TFile } from "obsidian";
+import type IconizeAssistant from "./main";
 
 type Rules = {
 	id?: string;
@@ -19,17 +20,19 @@ type Rules = {
 	enabled?: boolean;
 };
 
-type FileIcons = {
+type FileIcons = Record<string, {
 	icon?: string;
 	color?: string;
 	unsynced?: string[];
-};
+}>;
 
-export class IconicAssistant {
+export class Iconic {
 	app: App;
+	plugin: IconizeAssistant;
 
-	constructor(app: App) {
+	constructor(app: App, plugin: IconizeAssistant) {
 		this.app = app;
+		this.plugin = plugin;
 	}
 
 	private unwrapRegex(value: string): RegExp {
@@ -77,7 +80,7 @@ export class IconicAssistant {
 		return false;
 	}
 
-	searchIfApplicable(fileRules: Rules[], path: string): undefined | Rules {
+	private searchIfApplicable(fileRules: Rules[], path: string): undefined | Rules {
 		return fileRules.find((rule: any) => {
 			return rule.enabled && this.any([path], rule.operator, rule.value);
 		});
@@ -91,5 +94,19 @@ export class IconicAssistant {
 		const rules = [...fileRules, ...folderRules];
 		const fileIcons = settings.fileIcons as FileIcons;
 		return { rules, fileIcons };
+	}
+
+	async getFileIcon(file: TFile) {
+		const data = await this.loadData();
+		if (!data) return;
+		const { rules, fileIcons } = data;
+		const path = file.path;
+		const isFolder = this.plugin.findFolderNote(file)?.path;
+		const fileIcon = fileIcons?.[path];
+		if (fileIcon?.icon) return fileIcon.icon;
+		if (isFolder && fileIcons[isFolder]?.icon) return fileIcons[isFolder].icon;
+		const rule = this.searchIfApplicable(rules, file.path);
+		if (rule?.icon) return rule.icon
+		return null;
 	}
 }

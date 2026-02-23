@@ -28,18 +28,7 @@ export interface Icon {
 	prefix: string;
 }
 
-export interface IconFile {
-	[filepath: string]: [iconName: string];
-}
 
-export type Rule = {
-	rule: string;
-	icon: string;
-	for?: "everything" | "files" | "folders";
-	order: number;
-	color?: string;
-	useFilePath?: boolean;
-};
 
 type FrontmatterSettings = {
 	enable: boolean;
