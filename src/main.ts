@@ -56,6 +56,7 @@ export default class IconizeAssistant extends Plugin {
 	async getFileIcons(file: TFile) {
 		//get icons folder from another obsidian plugin
 		const fileIcon = await this.getIcon(file);
+		console.log(fileIcon);
 		const iconPack = (
 			await this.app.vault.adapter.list(this.settings.iconFolderPath)
 		).folders;

@@ -3,7 +3,7 @@
  *
  */
 
-import type { App, TFile } from "obsidian";
+import type { App, TFile, Plugin } from "obsidian";
 import type IconizeAssistant from "./main";
 
 type Rules = {
@@ -11,7 +11,7 @@ type Rules = {
 	name?: string;
 	icon?: string;
 	color?: string;
-	match?: string;
+	match?: "all" | "any" | "none";
 	conditions?: Array<{
 		source?: string;
 		operator?: string;
@@ -32,64 +32,40 @@ type FileIcons = Record<
 export class Iconic {
 	app: App;
 	plugin: IconizeAssistant;
+	iconic: Plugin;
 
 	constructor(app: App, plugin: IconizeAssistant) {
 		this.app = app;
 		this.plugin = plugin;
+		const iconic = this.app.plugins.getPlugin("iconic");
+		if (!iconic) throw new Error("Iconic is not found");
+		this.iconic = iconic;
 	}
 
-	private unwrapRegex(value: string): RegExp {
-		return value.startsWith("/") && value.endsWith("/")
-			? new RegExp(value.slice(1, -1))
-			: new RegExp(value);
-	}
-	/**
-	 * Check whether any items match a given operator & value.
-	 */
 
-	private any(
-		items: (string | null)[],
-		operator: "are" | "contain" | "startWith" | "endWith" | "match",
-		value: string,
-	): boolean {
-		if (value === "") return false;
-
-		switch (operator) {
-			case "are":
-				for (const item of items) if (item === value) return true;
-				break;
-			case "contain":
-				for (const item of items) if (String(item).includes(value)) return true;
-				break;
-			case "startWith":
-				for (const item of items)
-					if (String(item).startsWith(value)) return true;
-				break;
-			case "endWith":
-				for (const item of items) if (String(item).endsWith(value)) return true;
-				break;
-			case "match": {
-				try {
-					const regex = this.unwrapRegex(value);
-					for (const item of items) {
-						if (regex.test(String(item))) return true;
-					}
-				} catch {
-					/* Catch invalid regex */
-				}
-				break;
-			}
+	getFileItemFromTFile(tfile: TFile) {
+		//@ts-ignore
+		const items = this.iconic.getFileItems?.() ?? [];
+		for (const it of items) {
+			// Iconic utilise splitFilePath(fileItem.id) pour obtenir path
+			//@ts-ignore
+			const split = this.iconic.splitFilePath?.(it.id);
+			if (split?.path === tfile.path) return it;
 		}
-		return false;
+		return null;
 	}
 
 	private searchIfApplicable(
 		fileRules: Rules[],
-		path: string,
+		file: TFile
 	): undefined | Rules {
-		return fileRules.find((rule: any) => {
-			return rule.enabled && this.any([path], rule.operator, rule.value);
-		});
+		const fileItem = this.getFileItemFromTFile(file);
+		for (const rule of fileRules) {
+			//@ts-ignore
+			if (this.iconic.ruleManager.judgeFile(fileItem, rule, Date())) {
+				return rule
+			}
+		}
 	}
 	private async loadData() {
 		const iconicIconFolder = this.app.plugins.getPlugin("iconic");
@@ -111,7 +87,7 @@ export class Iconic {
 		const fileIcon = fileIcons?.[path];
 		if (fileIcon?.icon) return fileIcon.icon;
 		if (isFolder && fileIcons[isFolder]?.icon) return fileIcons[isFolder].icon;
-		const rule = this.searchIfApplicable(rules, file.path);
+		const rule = this.searchIfApplicable(rules, file);
 		if (rule?.icon) return rule.icon;
 		return null;
 	}
