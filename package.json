@@ -1,40 +1,41 @@
 {
-	"name": "iconize-assistant",
-	"version": "0.0.6",
-	"description": "Add your icon folder path in the frontmatter",
-	"main": "lib/main.js",
-	"license": "GPL-3.0-only",
-	"scripts": {
-		"build": "obsidian-plugin build src/main.ts",
-		"dev": "node dev.js",
-		"lint:fix": "eslint --ext .ts,.js,.json src --fix",
-		"lint": "eslint --ext .ts src",
-		"bump": "node commit-and-tag-version.js",
-		"preexport": "pnpm run build",
-		"export": "node export.js",
-		"predeploy": "pnpm run bump",
-		"deploy": "pnpm run export"
-	},
-	"commit-and-tag-version": {
-		"t": ""
-	},
-	"devDependencies": {
-		"ansi-colors": "^4.1.3",
-		"builtin-modules": "^3.3.0",
-		"commander": "^12.0.0",
-		"dedent": "^1.5.1",
-		"dotenv": "^16.4.1",
-		"obsidian": "^1.4.11",
-		"obsidian-plugin-cli": "^0.9.0",
-		"typescript": "^5.3.3"
-	},
-	"dependencies": {
-		"@lisandra-dev/eslint-config": "^1.1.6",
-		"@typescript-eslint/eslint-plugin": "^7.8.0",
-		"commit-and-tag-version": "^12.2.0",
-		"eslint": "8",
-		"i18next": "^23.8.2",
-		"obsidian-undocumented": "^0.1.3",
-		"ts-dedent": "^2.2.0"
-	}
+  "name": "iconize-assistant",
+  "version": "0.0.6",
+  "description": "Add your icon folder path in the frontmatter",
+  "main": "lib/main.js",
+  "license": "GPL-3.0-only",
+  "scripts": {
+    "build": "obsidian-plugin build src/main.ts",
+    "dev": "node dev.js",
+    "lint:fix": "eslint --ext .ts,.js,.json src --fix",
+    "lint": "eslint --ext .ts src",
+    "bump": "node commit-and-tag-version.js",
+    "preexport": "pnpm run build",
+    "export": "node export.js",
+    "predeploy": "pnpm run bump",
+    "deploy": "pnpm run export"
+  },
+  "commit-and-tag-version": {
+    "t": ""
+  },
+  "devDependencies": {
+    "ansi-colors": "^4.1.3",
+    "builtin-modules": "^3.3.0",
+    "commander": "^12.1.0",
+    "dedent": "^1.7.1",
+    "obsidian": "^1.12.2",
+    "obsidian-plugin-cli": "^0.9.0",
+    "obsidian-typings": "^4.100.0",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "@biomejs/biome": "^2.4.4",
+    "@lisandra-dev/eslint-config": "^1.1.6",
+    "commit-and-tag-version": "^12.6.1",
+    "obsidian-undocumented": "^0.1.3",
+    "ts-dedent": "^2.2.0"
+  },
+  "trustedDependencies": [
+    "obsidian-typings"
+  ]
 }
