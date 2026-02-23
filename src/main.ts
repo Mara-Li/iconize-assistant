@@ -1,5 +1,5 @@
 import { normalizePath, Plugin, TFile, TFolder } from "obsidian";
-import dedent from "ts-dedent";
+import dedent from "dedent";
 import { Iconic } from "./iconic";
 import { Iconize } from "./iconize";
 import { DEFAULT_SETTINGS, IconizeAssistantSettings } from "./interface";

@@ -8,7 +8,7 @@ import packageJson from "./package.json" with { type: "json" };
 import { loadEnvFile } from "process";
 
 // Initial configuration
-if (fs.fileExistsSync(".env")) {
+if (fs.existsSync(".env")) {
 	loadEnvFile(".env");
 }
 
