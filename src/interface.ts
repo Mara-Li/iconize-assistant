@@ -9,14 +9,14 @@ export const DEFAULT_SETTINGS: IconizeAssistantSettings = {
 	linkToFile: {
 		enable: true,
 		name: "icon_file",
-		hide: false
+		hide: false,
 	},
 	iconName: {
 		enable: true,
 		name: "icon",
-		hide: false
+		hide: false,
 	},
-	allowRegex: true
+	allowRegex: true,
 };
 
 export interface Icon {
@@ -26,7 +26,7 @@ export interface Icon {
 }
 
 export interface IconFile {
-	[filepath: string]: [iconName: string]
+	[filepath: string]: [iconName: string];
 }
 
 export type Rule = {
@@ -36,12 +36,10 @@ export type Rule = {
 	order: number;
 	color?: string;
 	useFilePath?: boolean;
-
-
-}
+};
 
 type FrontmatterSettings = {
 	enable: boolean;
 	name: string;
 	hide: boolean;
-}
+};

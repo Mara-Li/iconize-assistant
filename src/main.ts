@@ -11,7 +11,7 @@ import {
 import { IconizeAssistantTab } from "./settings";
 
 export default class IconizeAssistant extends Plugin {
-	settings: IconizeAssistantSettings;
+	settings!: IconizeAssistantSettings;
 
 	createIconPackPrefix(iconPackName: string): string {
 		if (iconPackName.includes("-")) {
@@ -46,8 +46,8 @@ export default class IconizeAssistant extends Plugin {
 	 * @param file
 	 */
 	findFolderNote(file: TFile): TFolder | undefined {
-		if (file.basename === "index" || file.basename === file.parent.name) {
-			return file.parent;
+		if (file.basename === "index" || file.basename === file?.parent?.name) {
+			return file.parent ?? undefined;
 		}
 		const regexExt = new RegExp(`\\.${file.extension}$`);
 		const outsideFolderPath = file.path.replace(regexExt, "");
@@ -63,7 +63,7 @@ export default class IconizeAssistant extends Plugin {
 		const obsidianIconFolder = this.app.plugins.getPlugin(
 			"obsidian-icon-folder",
 		);
-		const data = await obsidianIconFolder.loadData();
+		const data = await obsidianIconFolder?.loadData();
 		const rules = data.settings.rules as Rule[];
 		const iconFolder = data.settings.iconPacksPath as string;
 		this.settings.iconFolderPath = iconFolder;
@@ -79,9 +79,9 @@ export default class IconizeAssistant extends Plugin {
 		 */
 		const path = file.path;
 		const isFolder = this.findFolderNote(file)?.path;
-		const fileIcon: string = icon[path]
+		const fileIcon: string | null = icon[path]
 			? icon[path as string].toString()
-			: icon[isFolder]
+			: isFolder && icon[isFolder]
 				? icon[isFolder].toString()
 				: null;
 		const iconPack = (await this.app.vault.adapter.list(iconFolder)).folders;
@@ -101,12 +101,12 @@ export default class IconizeAssistant extends Plugin {
 				return iconPath.replace(`${iconFolder}/`, "");
 			}
 		} else if (this.searchIfApplicable(rules, path)) {
-			const iconPath = this.searchIfApplicable(rules, path).icon;
+			const iconPath = this.searchIfApplicable(rules, path)?.icon;
 			const packPrefix = allPackPrefix.find((pack) => {
-				return iconPath.startsWith(pack.prefix);
+				return iconPath?.startsWith(pack.prefix);
 			});
 			if (packPrefix) {
-				const folderIconPath = `${packPrefix.pack}/${iconPath.replace(packPrefix.prefix, "")}`;
+				const folderIconPath = `${packPrefix.pack}/${iconPath?.replace(packPrefix.prefix, "")}`;
 				//remove obsidian folder from path
 				return folderIconPath.replace(`${iconFolder}/`, "");
 			}
