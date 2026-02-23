@@ -1,3 +1,5 @@
+## [0.0.7-7](https://github.com/Mara-Li/iconize-assistant/compare/0.0.7-6...0.0.7-7) (2026-02-23)
+
 ## [0.0.7-6](https://github.com/Mara-Li/iconize-assistant/compare/0.0.7-5...0.0.7-6) (2026-02-23)
 
 ## [0.0.7-5](https://github.com/Mara-Li/iconize-assistant/compare/0.0.7-4...0.0.7-5) (2026-02-23)
