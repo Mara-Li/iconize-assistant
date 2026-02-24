@@ -195,6 +195,7 @@ export default class IconizeAssistant extends Plugin {
 			resources,
 			returnNull: false,
 			returnEmptyString: false,
+			showSupportNotice: false,
 		});
 		await this.loadSettings();
 		this.addSettingTab(new IconizeAssistantTab(this.app, this));
